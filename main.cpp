@@ -5,13 +5,13 @@
 #include "Star.h"
 #include "utils/Timer.h"
 
-#define FPS 30
+#define FPS 60
 
 //Screen dimension constants
-constexpr int SCREEN_WIDTH = 640;
-constexpr int SCREEN_HEIGHT = 480;
-constexpr int STARS_NUMBER = 100;
-constexpr float STAR_SPEED = 20.0f;
+constexpr int SCREEN_WIDTH = 1920;
+constexpr int SCREEN_HEIGHT = 1080;
+constexpr int STARS_NUMBER = 300;
+constexpr float STAR_SPEED = 80.0f;
 
 Uint64 lastTime = 0, currentTime;
 double deltaTime;
@@ -21,6 +21,7 @@ std::vector<Star> stars;
 int main() {
     //The window we'll be rendering to
     SDL_Window *window = nullptr;
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
     //The surface contained by the window
 
@@ -65,24 +66,25 @@ int main() {
 
                 // Paint the stars
                 SDL_LockSurface(screenSurface);
+                float const intended_movement = STAR_SPEED * static_cast<float>(deltaTime);
                 for (auto &star: stars) {
-                    if (const float intended_movement = star.transform.x + STAR_SPEED * deltaTime;
-                        intended_movement > SCREEN_WIDTH) {
+                    if (star.transform.x + intended_movement > SCREEN_WIDTH) {
                         star.move(0, static_cast<float>(random() % SCREEN_HEIGHT));
                         const int gray_color = static_cast<int>(random()) % 255;
                         star.setColor(SDL_MapRGB(screenSurface->format, gray_color, gray_color, gray_color));
                     } else {
-                        star.move(intended_movement, star.transform.y);
+                        star.move(star.transform.x + intended_movement, star.transform.y);
                     }
                     star.draw(screenSurface);
                 }
+
                 SDL_UnlockSurface(screenSurface);
 
                 //Update the surface
                 SDL_UpdateWindowSurface(window);
 
                 if (deltaTime < msFrame) {
-                    SDL_Delay(msFrame - deltaTime);
+                    SDL_Delay(static_cast<Uint32>(msFrame - deltaTime));
                 }
             }
         }

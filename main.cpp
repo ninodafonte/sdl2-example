@@ -5,16 +5,17 @@
 #include "Star.h"
 #include "utils/Timer.h"
 
-#define FPS 120
+#define FPS 30
 
 //Screen dimension constants
 constexpr int SCREEN_WIDTH = 640;
 constexpr int SCREEN_HEIGHT = 480;
 constexpr int STARS_NUMBER = 100;
+constexpr float STAR_SPEED = 20.0f;
 
 Uint64 lastTime = 0, currentTime;
 double deltaTime;
-float msFrame = 1 / (FPS / 1000.0f);
+double msFrame = 1 / (FPS / 1000.0f);
 std::vector<Star> stars;
 
 int main() {
@@ -65,9 +66,9 @@ int main() {
                 // Paint the stars
                 SDL_LockSurface(screenSurface);
                 for (auto &star: stars) {
-                    if (const int intended_movement = star.transform.x + static_cast<int>(ceil(1 * deltaTime));
+                    if (const float intended_movement = star.transform.x + STAR_SPEED * deltaTime;
                         intended_movement > SCREEN_WIDTH) {
-                        star.move(0, static_cast<int>(random()) % SCREEN_HEIGHT);
+                        star.move(0, static_cast<float>(random() % SCREEN_HEIGHT));
                         const int gray_color = static_cast<int>(random()) % 255;
                         star.setColor(SDL_MapRGB(screenSurface->format, gray_color, gray_color, gray_color));
                     } else {

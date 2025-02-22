@@ -9,10 +9,10 @@
 
 class Star {
 public:
-    SDL_Rect transform{};
+    SDL_FRect transform{};
     Uint32 star_color;
 
-    Star(const int x, const int y, const Uint32 color) {
+    Star(const float x, const float y, const Uint32 color) {
         transform.x = x;
         transform.y = y;
         transform.w = 1;
@@ -21,17 +21,17 @@ public:
     }
 
     void draw(const SDL_Surface *screenSurface) const {
-        Uint32 *pixel = static_cast<Uint32 *>(screenSurface->pixels) + transform.y * screenSurface->pitch / 4 +
-                        transform.x;
+        Uint32 *pixel = static_cast<Uint32 *>(screenSurface->pixels) + static_cast<long>(
+                            transform.y * static_cast<float>(screenSurface->pitch) / 4 + transform.x);
         *pixel = star_color;
     }
 
-    void move(int x, int y) {
+    void move(const float x, const float y) {
         transform.x = x;
         transform.y = y;
     }
 
-    void setColor(Uint32 color) {
+    void setColor(const Uint32 color) {
         this->star_color = color;
     }
 };
